@@ -7,7 +7,9 @@ exports.readObservation = (file, context) => {
     // console.log(`  Bucket: ${file.bucket}`);
     // console.log(`  File: ${file.name}`);
     const gcs = new Storage();
+
     const dataFile= gcs.bucket(file.bucket).file(file.name);
+    
     dataFile.createReadStream()
     .on('error', () => {
         ///Handle an error
@@ -16,7 +18,9 @@ exports.readObservation = (file, context) => {
     .pipe(csv())
     .on('data', (row) => {
         //Log row data
-        console.log(row);
+        // console.log(row);
+        printDict(row);
+
     })
     .on('end', () => {
         //Handle end of CSV
@@ -24,4 +28,14 @@ exports.readObservation = (file, context) => {
     })
 
 
+}
+
+//HELPER FUNCTIONS
+
+function printDict(row){
+    for (let key in row){
+        console.log(key + ' : '+ row [key]);
+        //second one does same thing
+        // console.log(`${key} : ${row[key]}`);
+    }
 }
